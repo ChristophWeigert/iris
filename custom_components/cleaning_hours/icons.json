@@ -1,0 +1,31 @@
+{
+  "entity": {
+    "button": {
+      "confirm": { "default": "mdi:check-circle" },
+      "dismiss": { "default": "mdi:close-circle" }
+    },
+    "image": {
+      "arrival": { "default": "mdi:door-open" },
+      "departure_door": { "default": "mdi:door-closed" },
+      "departure_car": { "default": "mdi:car" }
+    },
+    "number": {
+      "hourly_rate": { "default": "mdi:cash-clock" },
+      "payday_estimate": { "default": "mdi:timer-sand" }
+    },
+    "select": {
+      "arrival": { "default": "mdi:login" },
+      "departure": { "default": "mdi:logout" }
+    },
+    "sensor": {
+      "payout": { "default": "mdi:cash" },
+      "proposal": { "default": "mdi:broom" }
+    }
+  },
+  "services": {
+    "scan": { "service": "mdi:magnify" },
+    "confirm": { "service": "mdi:check-circle" },
+    "dismiss": { "service": "mdi:close-circle" },
+    "add_visit": { "service": "mdi:calendar-plus" }
+  }
+}
