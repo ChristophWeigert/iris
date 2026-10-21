@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # The squash-merge commit takes the PR title; release-please reads it for version and changelog.
-      - uses: amannn/action-semantic-pull-request@v5
+      - uses: amannn/action-semantic-pull-request@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
