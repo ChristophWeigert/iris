@@ -44,6 +44,7 @@ Assistant, then add the integration with the button above or via
 | Dashboard path | Opened by the notification's *Open* button. |
 | Google Sheets log | Optional Google Sheets config entry. |
 | Worksheet | Tab inside the sheet, default `Visits`. |
+| Visit window start / end | Default 08:00–16:00. Times outside are offered but never preselected. |
 
 All of it can be changed later via *Reconfigure*. After setup, set **Hourly rate** once.
 
@@ -53,11 +54,13 @@ All of it can be changed later via *Reconfigure*. After setup, set **Hourly rate
   - an **arrival** is a doorbell ring followed by the private door opening within 2 minutes;
   - **departure candidates** are later private-door openings; paid time ends when the door closes;
   - a candidate gets 🚗 when the vehicle sensor fired (up to 30 min before the ring, or 5 min after
-    a departure opening) and 🚗 candidates are preselected.
+    a departure opening);
+  - preselected are candidates inside the **visit window** first, then 🚗 ones, then the first
+    arrival and the last departure.
 - Scanning is idempotent: one visit per day, reviewed visits are never changed, one notification
   per visit.
 - **Review**: the notification shows the time span and warnings (*not expected day*, *no car*,
-  *no departure*) with **Confirm**, **Dismiss** and **Open**.
+  *no departure*, *outside window*) with **Confirm**, **Dismiss** and **Open**.
 - **Pay period** runs from the day after one month's last Wednesday through the next month's last
   Wednesday (payday). The payday visit is paid as an **estimate** (average of the last 4 confirmed
   visits, or set by hand); once confirmed, a difference over €10 becomes a **correction** on the
@@ -145,3 +148,11 @@ pytest --cov          # needs Linux/macOS or Docker (Home Assistant does not run
 mypy
 ruff check .
 ```
+
+### Releases
+
+Give PR titles a [Conventional Commits](https://www.conventionalcommits.org/) prefix (`fix: …`,
+`feat: …`, `feat!: …` for breaking changes; the *PR title* check enforces it) and
+squash-merge. release-please keeps a release PR
+open that collects them; merging it bumps `manifest.json`, updates `CHANGELOG.md` and publishes the
+tag and GitHub release that HACS installs from.

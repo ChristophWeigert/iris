@@ -92,6 +92,17 @@ async def test_picking_arrival_recomputes_departures(
     assert state(hass, "select.cleaning_hours_arrival").state == "09:31:00 🚗"
 
 
+async def test_outside_window_warning(
+    hass: HomeAssistant, entry: MockConfigEntry, history: Any, notify_calls: list[ServiceCall]
+) -> None:
+    history[DOORBELL] = changes(("17:00", True), ("17:00:10", False))
+    history[DOOR] = changes(("17:01", True), ("17:02", False), ("17:30", True), ("17:31", False))
+    await scan(hass)
+
+    assert "outside_window" in state(hass, "sensor.cleaning_hours_proposal").attributes["warnings"]
+    assert "outside window" in notify_calls[0].data["message"]
+
+
 async def test_departure_missing_and_warnings(
     hass: HomeAssistant, entry: MockConfigEntry, history: Any, notify_calls: list[ServiceCall]
 ) -> None:

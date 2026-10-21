@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "bootstrap-sha": "7c89ab7d477ae1693a285b49432027c2ab52f07e",
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "custom_components/cleaning_hours/manifest.json",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import calendar
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import Any
 
 RING_TO_DOOR = timedelta(minutes=2)
@@ -79,9 +79,17 @@ def departure_candidates(
     ]
 
 
-def preselect(cands: list[Candidate], *, last: bool) -> int:
-    """Prefer a candidate with a car seen; else the first (arrival) or last (departure)."""
-    idx = [i for i, c in enumerate(cands) if c["car"]] or list(range(len(cands)))
+def in_window(cand: Candidate, window: tuple[time, time]) -> bool:
+    """Departures count from the door opening, arrivals from their time."""
+    when: str = cand.get("opened") or cand["time"]
+    return window[0] <= datetime.fromisoformat(when).time() <= window[1]
+
+
+def preselect(cands: list[Candidate], *, last: bool, window: tuple[time, time]) -> int:
+    """Inside the visit window first (all if none is), then a car seen,
+    then the first (arrival) or last (departure)."""
+    idx = [i for i, c in enumerate(cands) if in_window(c, window)] or list(range(len(cands)))
+    idx = [i for i in idx if cands[i]["car"]] or idx
     return idx[-1] if last else idx[0]
 
 

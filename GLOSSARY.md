@@ -25,7 +25,7 @@ A private-door opening after arrival; one of them is the visit's departure, pick
 _Avoid_: Exit event, leave time
 
 **Confirmed visit**:
-A visit whose times count towards pay, either accepted automatically or approved by a reviewer.
+A visit whose times count towards pay, approved or entered by hand by a reviewer.
 _Avoid_: Approved visit, final visit
 
 **Pay period**:
@@ -47,6 +47,10 @@ _Avoid_: Front door, house door, Haustür
 **Practice door**:
 The separate entrance for the medical practice's patients; never used by the cleaner.
 _Avoid_: Second door, side door
+
+**Visit window**:
+The time of day a visit's arrival and departure are expected in (08:00–16:00 by default). Times outside it are still offered to a reviewer but never preselected.
+_Avoid_: Working hours, schedule, cleaning time
 
 **Expected day**:
 The weekday the cleaner usually comes (Wednesday). A visit on any other day always needs a reviewer.
