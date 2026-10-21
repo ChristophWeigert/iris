@@ -27,7 +27,11 @@ from .const import (
     CONF_NOTIFY,
     CONF_SHEET,
     CONF_VEHICLE,
+    CONF_WINDOW_END,
+    CONF_WINDOW_START,
     CONF_WORKSHEET,
+    DEFAULT_WINDOW_END,
+    DEFAULT_WINDOW_START,
     DEFAULT_WORKSHEET,
     DOMAIN,
     SIGNAL,
@@ -65,6 +69,15 @@ class Tracker:
     @property
     def conf(self) -> dict[str, Any]:
         return {**self.entry.data, **self.entry.options}
+
+    @property
+    def window(self) -> tuple[time, time]:
+        """Visit window; entries made before it existed get the defaults."""
+        c = self.conf
+        return (
+            time.fromisoformat(c.get(CONF_WINDOW_START, DEFAULT_WINDOW_START)),
+            time.fromisoformat(c.get(CONF_WINDOW_END, DEFAULT_WINDOW_END)),
+        )
 
     async def async_load(self) -> None:
         if stored := await self._store.async_load():
@@ -137,7 +150,7 @@ class Tracker:
             "status": "proposed",
             "notified": bool(old and old["notified"]),
             "arrival": arrivals,
-            "arrival_idx": logic.preselect(arrivals, last=False),
+            "arrival_idx": logic.preselect(arrivals, last=False, window=self.window),
             "cars": [c.isoformat() for c in cars],
             "doors": [(o.isoformat(), c and c.isoformat()) for o, c in doors],
         }
@@ -150,8 +163,7 @@ class Tracker:
             visit["notified"] = True
         await self.async_save()
 
-    @staticmethod
-    def _set_departures(visit: dict[str, Any], keep: dict[str, Any] | None = None) -> None:
+    def _set_departures(self, visit: dict[str, Any], keep: dict[str, Any] | None = None) -> None:
         arrival = datetime.fromisoformat(visit["arrival"][visit["arrival_idx"]]["time"])
         doors: logic.Doors = [
             (datetime.fromisoformat(o), datetime.fromisoformat(c) if c else None)
@@ -160,7 +172,7 @@ class Tracker:
         cars = [datetime.fromisoformat(c) for c in visit["cars"]]
         deps = logic.departure_candidates(doors, arrival, cars)
         visit["departure"] = deps
-        visit["departure_idx"] = logic.preselect(deps, last=True) if deps else 0
+        visit["departure_idx"] = logic.preselect(deps, last=True, window=self.window) if deps else 0
         if keep and keep["departure"] and (picked := keep["departure"][keep["departure_idx"]]) in deps:
             visit["departure_idx"] = deps.index(picked)
 
@@ -175,8 +187,7 @@ class Tracker:
 
     # --- review ---------------------------------------------------------
 
-    @staticmethod
-    def warnings(day: str, visit: dict[str, Any]) -> list[str]:
+    def warnings(self, day: str, visit: dict[str, Any]) -> list[str]:
         out = []
         if date.fromisoformat(day).weekday() != logic.EXPECTED_WEEKDAY:
             out.append("not_expected_day")
@@ -185,6 +196,11 @@ class Tracker:
             out.append("no_car")
         if not visit["departure"]:
             out.append("no_departure")
+        picked = [visit["arrival"][visit["arrival_idx"]]]
+        if visit["departure"]:
+            picked.append(visit["departure"][visit["departure_idx"]])
+        if not all(logic.in_window(c, self.window) for c in picked):
+            out.append("outside_window")
         return out
 
     async def _notify(self, day: str, visit: dict[str, Any]) -> None:

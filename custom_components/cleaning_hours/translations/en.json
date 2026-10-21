@@ -5,7 +5,8 @@
       "single_instance_allowed": "Cleaning Hours is already set up."
     },
     "error": {
-      "unknown_service": "This notify service does not exist."
+      "unknown_service": "This notify service does not exist.",
+      "window_end_before_start": "The visit window must end after it starts."
     },
     "step": {
       "user": {
@@ -18,7 +19,9 @@
           "notify": "Notify service",
           "dashboard": "Dashboard path",
           "sheet_config_entry": "Google Sheets log",
-          "worksheet": "Worksheet"
+          "worksheet": "Worksheet",
+          "window_start": "Visit window start",
+          "window_end": "Visit window end"
         },
         "data_description": {
           "doorbell": "Rings when the cleaner arrives; also its camera takes the arrival snapshot.",
@@ -27,7 +30,9 @@
           "notify": "Reaches every reviewer's phone, e.g. a notify group.",
           "dashboard": "Opened by the notification's Open button.",
           "sheet_config_entry": "Optional: each confirmed visit is appended as a row.",
-          "worksheet": "Tab name inside the Google Sheet."
+          "worksheet": "Tab name inside the Google Sheet.",
+          "window_start": "Arrivals and departures before this are offered but never preselected.",
+          "window_end": "Arrivals and departures after this are offered but never preselected."
         }
       },
       "reconfigure": {
@@ -39,7 +44,9 @@
           "notify": "Notify service",
           "dashboard": "Dashboard path",
           "sheet_config_entry": "Google Sheets log",
-          "worksheet": "Worksheet"
+          "worksheet": "Worksheet",
+          "window_start": "Visit window start",
+          "window_end": "Visit window end"
         }
       }
     }

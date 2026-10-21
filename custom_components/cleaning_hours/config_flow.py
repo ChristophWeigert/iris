@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import time
 from typing import Any
 
 import probatio as vol  # HA replaced voluptuous with probatio (same API)
@@ -16,8 +17,12 @@ from .const import (
     CONF_NOTIFY,
     CONF_SHEET,
     CONF_VEHICLE,
+    CONF_WINDOW_END,
+    CONF_WINDOW_START,
     CONF_WORKSHEET,
     DEFAULT_DASHBOARD,
+    DEFAULT_WINDOW_END,
+    DEFAULT_WINDOW_START,
     DEFAULT_WORKSHEET,
     DOMAIN,
 )
@@ -46,6 +51,10 @@ class CleaningHoursConfigFlow(ConfigFlow, domain=DOMAIN):
                         selector.ConfigEntrySelectorConfig(integration="google_sheets")
                     ),
                     vol.Optional(CONF_WORKSHEET, default=DEFAULT_WORKSHEET): str,
+                    vol.Required(
+                        CONF_WINDOW_START, default=DEFAULT_WINDOW_START
+                    ): selector.TimeSelector(),
+                    vol.Required(CONF_WINDOW_END, default=DEFAULT_WINDOW_END): selector.TimeSelector(),
                 }
             ),
             defaults,
@@ -55,6 +64,10 @@ class CleaningHoursConfigFlow(ConfigFlow, domain=DOMAIN):
         domain, _, service = user_input[CONF_NOTIFY].partition(".")
         if not self.hass.services.has_service(domain, service):
             return {CONF_NOTIFY: "unknown_service"}
+        if time.fromisoformat(user_input[CONF_WINDOW_END]) <= time.fromisoformat(
+            user_input[CONF_WINDOW_START]
+        ):
+            return {CONF_WINDOW_END: "window_end_before_start"}
         return {}
 
     async def async_step_user(

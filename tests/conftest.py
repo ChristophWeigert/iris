@@ -25,6 +25,8 @@ CONFIG = {
     "notify": "notify.family",
     "dashboard": "/lovelace/cleaning",
     "worksheet": "Visits",
+    "window_start": "08:00:00",
+    "window_end": "16:00:00",
 }
 DAY = "2026-10-21"  # a Wednesday
 

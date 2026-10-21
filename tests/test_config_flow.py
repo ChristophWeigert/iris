@@ -23,6 +23,11 @@ async def test_user_flow(hass: HomeAssistant, notify_calls: list[ServiceCall]) -
     assert bad["type"] is FlowResultType.FORM
     assert bad["errors"] == {"notify": "unknown_service"}
 
+    reversed_window = await hass.config_entries.flow.async_configure(
+        result["flow_id"], {**CONFIG, "window_start": "16:00:00", "window_end": "08:00:00"}
+    )
+    assert reversed_window["errors"] == {"window_end": "window_end_before_start"}
+
     done = await hass.config_entries.flow.async_configure(result["flow_id"], CONFIG)
     assert done["type"] is FlowResultType.CREATE_ENTRY
     assert done["title"] == "Cleaning Hours"

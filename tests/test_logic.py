@@ -1,6 +1,6 @@
 """Tests for the pure visit/pay logic."""
 
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 from custom_components.cleaning_hours import logic
 
@@ -18,28 +18,39 @@ DOOR = [
     (t("16:10"), True), (t("16:11"), False),   # family comes home
 ]
 CARS = [t("09:10"), t("15:33")]
+WINDOW = (time(8), time(16))
 
 
 def test_arrival_prefers_ring_with_car():
     doors = logic.door_periods(DOOR)
     cands = logic.arrival_candidates([t("07:59"), t("09:30")], doors, CARS)
     assert [c["time"][11:16] for c in cands] == ["08:00", "09:31"]
-    assert cands[logic.preselect(cands, last=False)]["time"][11:16] == "09:31"
+    assert cands[logic.preselect(cands, last=False, window=WINDOW)]["time"][11:16] == "09:31"
 
 
 def test_departure_prefers_car_over_last_opening():
     doors = logic.door_periods(DOOR)
     cands = logic.departure_candidates(doors, t("09:31"), CARS)
     assert [c["time"][11:16] for c in cands] == ["12:01", "15:31", "16:11"]
-    pick = cands[logic.preselect(cands, last=True)]
+    pick = cands[logic.preselect(cands, last=True, window=WINDOW)]
     assert pick["time"][11:16] == "15:31"
     assert logic.minutes_between(t("09:31").isoformat(), pick["time"]) == 360
 
 
-def test_departure_without_car_takes_last_and_skips_open_door():
+def test_departure_without_car_takes_last_in_window_and_skips_open_door():
     doors = logic.door_periods(DOOR + [(t("16:30"), True)])  # still open: not a candidate
     cands = logic.departure_candidates(doors, t("09:31"), [])
-    assert cands[logic.preselect(cands, last=True)]["time"][11:16] == "16:11"
+    assert cands[logic.preselect(cands, last=True, window=WINDOW)]["time"][11:16] == "15:31"
+    wide = (time(8), time(18))
+    assert cands[logic.preselect(cands, last=True, window=wide)]["time"][11:16] == "16:11"
+
+
+def test_window_beats_car_and_falls_back_when_empty():
+    doors = logic.door_periods(DOOR)
+    cands = logic.departure_candidates(doors, t("09:31"), [t("16:12")])  # family car at 16:12
+    assert cands[logic.preselect(cands, last=True, window=WINDOW)]["time"][11:16] == "15:31"
+    late = (time(17), time(18))  # nothing inside: old rule, car first
+    assert cands[logic.preselect(cands, last=True, window=late)]["time"][11:16] == "16:11"
 
 
 def test_rising_edges_ignore_initial_on():
