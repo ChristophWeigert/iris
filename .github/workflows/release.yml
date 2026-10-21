@@ -13,3 +13,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
+        with:
+          # Own token, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN don't trigger the required checks.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
