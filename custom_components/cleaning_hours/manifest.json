@@ -1,0 +1,16 @@
+{
+  "domain": "cleaning_hours",
+  "name": "Cleaning Hours",
+  "after_dependencies": ["google_sheets", "mobile_app", "unifiprotect"],
+  "codeowners": ["@ChristophWeigert"],
+  "config_flow": true,
+  "dependencies": ["recorder"],
+  "documentation": "https://github.com/ChristophWeigert/iris",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/ChristophWeigert/iris/issues",
+  "quality_scale": "platinum",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.2.0"
+}

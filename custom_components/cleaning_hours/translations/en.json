@@ -1,0 +1,102 @@
+{
+  "config": {
+    "abort": {
+      "reconfigure_successful": "Reconfiguration successful.",
+      "single_instance_allowed": "Cleaning Hours is already set up."
+    },
+    "error": {
+      "unknown_service": "This notify service does not exist."
+    },
+    "step": {
+      "user": {
+        "title": "Cleaning Hours",
+        "description": "Pick the sensors that show the cleaner's visits.",
+        "data": {
+          "doorbell": "Doorbell ring",
+          "door": "Private door contact",
+          "vehicle": "Front-yard vehicle detection",
+          "notify": "Notify service",
+          "dashboard": "Dashboard path",
+          "sheet_config_entry": "Google Sheets log",
+          "worksheet": "Worksheet"
+        },
+        "data_description": {
+          "doorbell": "Rings when the cleaner arrives; also its camera takes the arrival snapshot.",
+          "door": "The private door the cleaner uses, not the practice door.",
+          "vehicle": "A hint only; its camera takes the departure car snapshot.",
+          "notify": "Reaches every reviewer's phone, e.g. a notify group.",
+          "dashboard": "Opened by the notification's Open button.",
+          "sheet_config_entry": "Optional: each confirmed visit is appended as a row.",
+          "worksheet": "Tab name inside the Google Sheet."
+        }
+      },
+      "reconfigure": {
+        "title": "Cleaning Hours",
+        "data": {
+          "doorbell": "Doorbell ring",
+          "door": "Private door contact",
+          "vehicle": "Front-yard vehicle detection",
+          "notify": "Notify service",
+          "dashboard": "Dashboard path",
+          "sheet_config_entry": "Google Sheets log",
+          "worksheet": "Worksheet"
+        }
+      }
+    }
+  },
+  "entity": {
+    "button": {
+      "confirm": { "name": "Confirm" },
+      "dismiss": { "name": "Dismiss" }
+    },
+    "image": {
+      "arrival": { "name": "Arrival" },
+      "departure_door": { "name": "Departure door" },
+      "departure_car": { "name": "Departure car" }
+    },
+    "number": {
+      "hourly_rate": { "name": "Hourly rate" },
+      "payday_estimate": { "name": "Payday estimate" }
+    },
+    "select": {
+      "arrival": { "name": "Arrival" },
+      "departure": { "name": "Departure" }
+    },
+    "sensor": {
+      "payout": { "name": "Payout" },
+      "proposal": { "name": "Proposal" }
+    }
+  },
+  "exceptions": {
+    "not_loaded": { "message": "Cleaning Hours is not set up." },
+    "no_proposed_visit": { "message": "There is no visit waiting for review on {date}." },
+    "no_departure": { "message": "The visit on {date} has no departure yet. Scan again later." },
+    "end_before_start": { "message": "The end time must be after the start time." }
+  },
+  "services": {
+    "scan": {
+      "name": "Scan day",
+      "description": "Look for a visit on a day still in the recorder history. Safe to repeat.",
+      "fields": { "date": { "name": "Date", "description": "Defaults to today." } }
+    },
+    "confirm": {
+      "name": "Confirm visit",
+      "description": "Confirm the proposed visit of a day.",
+      "fields": { "date": { "name": "Date", "description": "Defaults to today." } }
+    },
+    "dismiss": {
+      "name": "Dismiss visit",
+      "description": "Mark the proposed visit of a day as not a visit.",
+      "fields": { "date": { "name": "Date", "description": "Defaults to today." } }
+    },
+    "add_visit": {
+      "name": "Add visit",
+      "description": "Enter a confirmed visit by hand, replacing that day's visit.",
+      "fields": {
+        "date": { "name": "Date", "description": "Defaults to today." },
+        "start": { "name": "Start", "description": "Door opened on arrival." },
+        "end": { "name": "End", "description": "Door closed on departure." }
+      }
+    }
+  }
+}

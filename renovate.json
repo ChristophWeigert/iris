@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "description": "Keep the test harness in step with Home Assistant releases",
+      "matchPackageNames": ["pytest-homeassistant-custom-component"],
+      "automerge": false
+    },
+    {
+      "description": "Dev tooling: merge minor/patch updates automatically",
+      "matchPackageNames": ["mypy", "ruff"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

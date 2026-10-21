@@ -1,0 +1,28 @@
+scan:
+  fields:
+    date:
+      selector:
+        date:
+confirm:
+  fields:
+    date:
+      selector:
+        date:
+dismiss:
+  fields:
+    date:
+      selector:
+        date:
+add_visit:
+  fields:
+    date:
+      selector:
+        date:
+    start:
+      required: true
+      selector:
+        time:
+    end:
+      required: true
+      selector:
+        time:
